@@ -1,0 +1,41 @@
+class Solution {
+public:
+    // Function to remove the minimum number of parentheses to make a valid parentheses string.
+    string minRemoveToMakeValid(string s) {
+        string tempStack; // Simulates a stack to hold valid characters.
+        int openCount = 0; // Counter for unmatched '(' characters.
+
+        // First pass: Remove any ')' that doesn't have a matching '('.
+        for (char& c : s) {
+            if (c == ')' && openCount == 0) continue; // Skip invalid ')'.
+            if (c == '(') {
+                openCount++; // Increment counter for '('.
+            } else if (c == ')') {
+                openCount--; // Decrement counter for ')'.
+            }
+            tempStack.push_back(c); // Add the character to the stack.
+        }
+
+        string result; // String that will store the valid parentheses sequence.
+        openCount = 0; // Reset counter for the next pass.
+
+        // Second pass: Remove any '(' that doesn't have a matching ')' from the end.
+        while (!tempStack.empty()) {
+            char c = tempStack.back(); // Take the last character from the stack.
+            tempStack.pop_back(); // Remove that character from the stack.
+          
+            if (c == '(' && openCount == 0) continue; // Skip invalid '('.
+            if (c == ')') {
+                openCount++; // Increment counter for ')'.
+            } else if (c == '(') {
+                openCount--; // Decrement counter for '('.
+            }
+            result.push_back(c); // Add the character to the result string.
+        }
+
+        // The result is built in reverse order, so we need to reverse it.
+        std::reverse(result.begin(), result.end());
+
+        return result; // Return the valid parentheses string.
+    }
+};
