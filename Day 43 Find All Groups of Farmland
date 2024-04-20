@@ -1,0 +1,30 @@
+// OJ: https://leetcode.com/problems/find-all-groups-of-farmland/
+// Time: O(MN)
+// Space: O(MN)
+class Solution {
+    int M, N, dirs[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
+    void dfs(vector<vector<int>> &A, int i, int j, int &bottom, int &right) {
+        A[i][j] = 0;
+        bottom = max(bottom, i);
+        right = max(right, j);
+        for (auto &[dx, dy] : dirs) {
+            int x = i + dx, y = j + dy;
+            if (x < 0 || x >= M || y < 0 || y >= N || A[x][y] == 0) continue;
+            dfs(A, x, y, bottom, right);
+        }
+    }
+public:
+    vector<vector<int>> findFarmland(vector<vector<int>>& A) {
+        M = A.size(), N = A[0].size();
+        vector<vector<int>> ans;
+        for (int i = 0; i < M; ++i) {
+            for (int j = 0; j < N; ++j) {
+                if (A[i][j] == 0) continue;
+                int bottom = i, right = j;
+                dfs(A, i, j, bottom, right);
+                ans.push_back({i, j, bottom, right});
+            }
+        }
+        return ans;
+    }
+};
