@@ -1,0 +1,23 @@
+ int maxBits = 32; // Maximum number of bits in an integer
+    int ops = 0;
+    
+    // Iterate through each bit of k
+    for (int i = maxBits - 1; i >= 0; i--) {
+        int bit = (k >> i) & 1; // Get the i-th bit of k
+        
+        // Count the number of set bits in nums at i-th position
+        int setBits = 0;
+        for (int num : nums) {
+            setBits += (num >> i) & 1;
+        }
+        
+        // Determine whether to flip the bit
+        if ((setBits % 2 == 0 && bit == 1) || (setBits % 2 == 1 && bit == 0)) {
+            // If the current bit in k is 1 and the number of set bits in nums is even, or
+            // if the current bit in k is 0 and the number of set bits in nums is odd,
+            // then we need to flip this bit
+            ops += 1;
+        }
+    }
+    
+    return ops;
