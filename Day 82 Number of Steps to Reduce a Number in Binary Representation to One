@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int numSteps(string s) {
+        int steps = 0;
+        int carry = 0;
+        
+        // Iterate from the least significant bit to the most significant bit
+        for (int i = s.size() - 1; i > 0; --i) {
+            if ((s[i] - '0' + carry) % 2 == 0) {
+                // Current bit + carry is even, we can divide by 2 (shift right)
+                steps++;
+            } else {
+                // Current bit + carry is odd, we need to add 1 to make it even
+                carry = 1; // Adding 1 will result in a carry for the next bit
+                steps += 2; // One step for adding 1 and one for dividing by 2
+            }
+        }
+        
+        // If there is a carry left for the most significant bit, it means we have to add 1
+        // and then divide by 2, else just divide by 2
+        return steps + carry;
+    }
+};
