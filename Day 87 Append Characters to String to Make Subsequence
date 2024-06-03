@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int appendCharacters(string s, string t) {
+        int i = 0, j = 0;
+        int s_len = s.size(), t_len = t.size();
+
+        while (i < s_len && j < t_len) {
+            if (s[i] == t[j]) {
+                j++;
+            }
+            i++;
+        }
+
+        // If all characters of t are matched, return 0, otherwise return remaining characters in t
+        return t_len - j;
+    }
+};
