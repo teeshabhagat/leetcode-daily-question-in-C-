@@ -1,0 +1,30 @@
+class Solution {
+public:
+    string replaceWords(vector<string>& dictionary, string sentence) {
+        // Step 1: Create a set of dictionary words
+        unordered_set<string> dic(dictionary.begin(), dictionary.end());
+        
+        // Step 2: Use a stringstream to split the sentence into words
+        stringstream ss(sentence);
+        string word, ans;
+        
+        // Step 3: Iterate through each word in the sentence
+        while (ss >> word) {
+            string prefix;
+            
+            // Step 4: Check prefixes of increasing lengths
+            for (int i = 1; i <= word.size(); ++i) {
+                prefix = word.substr(0, i);
+                if (dic.find(prefix) != dic.end()) {
+                    break; // Prefix found, exit the loop
+                }
+            }
+            
+            // Step 5: Add the found prefix or the original word to the answer
+            if (!ans.empty())   ans += " " + prefix;
+            else                ans += prefix;
+        }
+        
+        return ans;
+    }
+};
