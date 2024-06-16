@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        long miss = 1; // can form [0, miss)
+        int added = 0;
+        int i = 0;
+        while (miss <= n) {
+            if (i < nums.size() && nums[i] <= miss) {
+                miss += nums[i++]; // num is less than miss, can form [0, miss + num)
+            } else {
+                miss += miss; // add miss, can form [0, 2 * miss)
+                added += 1;
+            }
+        }
+        return added;
+    }
+};
