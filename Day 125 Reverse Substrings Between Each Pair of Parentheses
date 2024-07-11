@@ -1,0 +1,43 @@
+
+class Solution {
+public:
+    // Function for reversing substrings within parentheses.
+    std::string reverseParentheses(std::string s) {
+        int length = s.size(); // Length of the input string.
+        std::vector<int> pairedIndex(length); // This vector holds paired indices of parentheses.
+        std::stack<int> openParensStack; // Stack to keep track of the positions of '('.
+
+        // First pass: identify and record positions of paired parentheses
+        for (int i = 0; i < length; ++i) {
+            if (s[i] == '(') {
+                // When we encounter '(', push the index on the stack.
+                openParensStack.push(i);
+            } else if (s[i] == ')') {
+                // For ')', pop the top of the stack to find the matching '('.
+                int matchedIndex = openParensStack.top();
+                openParensStack.pop();
+                pairedIndex[i] = matchedIndex; // Set the pair for ')'.
+                pairedIndex[matchedIndex] = i; // Set the pair for '('.
+            }
+        }
+
+        std::string result; // This will hold the final output string.
+        int index = 0; // Current index in the string.
+        int direction = 1; // Direction of traversal. 1 for forward, -1 for backward.
+
+        // Second pass: build the result string by navigating through the pairs.
+        while (index < length) {
+            if (s[index] == '(' || s[index] == ')') {
+                // On hitting a parenthesis, jump to its pair and invert direction
+                index = pairedIndex[index];
+                direction = -direction;
+            } else {
+                // Otherwise, just add the current character to the result
+                result.push_back(s[index]);
+            }
+            index += direction; // Move in the current direction.
+        }
+
+        return result; // Return the final reversed string.
+    }
+};
