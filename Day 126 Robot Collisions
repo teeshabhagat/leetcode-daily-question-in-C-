@@ -1,0 +1,77 @@
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <stack>
+#include <unordered_map>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> survivedRobotsHealths(vector<int>& positions, vector<int>& healths, string directions) {
+        int n = positions.size();
+        vector<tuple<int, int, char, int>> robots;  // (position, health, direction, original_index)
+        
+        for (int i = 0; i < n; ++i) {
+            robots.push_back({positions[i], healths[i], directions[i], i});
+        }
+        
+        // Sort robots by their initial positions
+        sort(robots.begin(), robots.end());
+        
+        stack<tuple<int, int, char, int>> st;
+        
+        for (auto& robot : robots) {
+            int pos = get<0>(robot);
+            int health = get<1>(robot);
+            char dir = get<2>(robot);
+            int original_index = get<3>(robot);
+            
+            if (dir == 'R') {
+                st.push(robot);
+            } else {  // dir == 'L'
+                while (!st.empty() && get<2>(st.top()) == 'R') {
+                    auto right_robot = st.top();
+                    st.pop();
+                    
+                    int r_health = get<1>(right_robot);
+                    int r_index = get<3>(right_robot);
+                    
+                    if (r_health > health) {
+                        --r_health;
+                        health = 0;
+                        st.push({get<0>(right_robot), r_health, 'R', r_index});
+                        break;
+                    } else if (r_health < health) {
+                        --health;
+                    } else {
+                        health = 0;
+                        break;
+                    }
+                }
+                
+                if (health > 0) {
+                    st.push({pos, health, 'L', original_index});
+                }
+            }
+        }
+        
+        // Create a map to store the final health of robots by their original index
+        unordered_map<int, int> index_to_health;
+        while (!st.empty()) {
+            auto robot = st.top();
+            st.pop();
+            index_to_health[get<3>(robot)] = get<1>(robot);
+        }
+        
+        // Extract final healths in the order of initial indices
+        vector<int> final_healths;
+        for (int i = 0; i < n; ++i) {
+            if (index_to_health.find(i) != index_to_health.end()) {
+                final_healths.push_back(index_to_health[i]);
+            }
+        }
+        
+        return final_healths;
+    }
+};
